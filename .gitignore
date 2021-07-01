@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+graphTheory/.vs
+graphTheory/Debug
+graphTheory/graphTheory/Debug

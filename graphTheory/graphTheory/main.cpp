@@ -1,117 +1,83 @@
 #include<iostream>
-#include<algorithm>
-
-#include<vector>
-#include<queue>
 #include<string>
+#include<queue>
+#include<vector>
 
-struct node {
-public:
-	node() 
-		: 
-		number(m_counter++),
-		neighbours(std::vector<node*>()),
-		visited(false)
-	{}
-private:
-	static int m_counter;
+#include<optional>
+#include<utility>
 
-public:
-	int number = -999;
-	std::vector<node*> neighbours;
-	
-	bool visited = false;
-	int id = -1;
-};
-
-int node::m_counter = 0;
-
-void dfs(node& current,int currentId) {
-
-	//no point in processing a node already visited
-	if (current.visited == true)
-		return;
-
-	//std::cout << current.number << " "; //print out the current node in processing
-	current.visited = true;  //mark the current node as processed
-	current.id = currentId;
-
-	//perform dfs for all neighbours.. 
-	for (auto neighbour : current.neighbours) {
-		dfs(*neighbour,currentId);
+bool notRock(std::vector<int> rocks, int i) {
+	for (auto rock : rocks) {
+		if (rock == i)
+			return false;
 	}
 
-	return; //finish
+	return true;
 }
-void bfs(node& current)
-{
-	std::queue<node*> nodeList; //queue to keep track of where I am
-	nodeList.push(&current);
-	current.visited = true;
 
-	while (nodeList.size() > 0) {
-		node* current = nodeList.front();
-		nodeList.pop();
+std::optional<std::vector<int>> shortestPath(int start, int end, std::vector<int> rocks, std::vector<std::vector<int>> adjacencyMatrix) {
+	
+	std::vector<int> visited = std::vector<int>(adjacencyMatrix.size(), 0);
+	std::queue<std::pair<int,std::vector<int>>> visitationNodes;
 
-		std::cout << current->number << " ";
+	visitationNodes.push(std::make_pair(start,std::vector<int>()));
+	visited[start] = 1;
 
-		for (node* neighbour : current->neighbours) {
-			if (neighbour->visited == false) {
-				nodeList.push(neighbour);
-				neighbour->visited = true;
+	while (!visitationNodes.empty())
+	{
+		std::pair<int,std::vector<int>> processingNode = visitationNodes.front();
+		visitationNodes.pop();
+
+		if (processingNode.first == end)
+		{
+			processingNode.second.emplace_back(processingNode.first); //we no longer care about proper maintainence as the stack frame is destroyed by the return..
+			return processingNode.second;
+		}
+			
+
+		for (int i = 0; i < adjacencyMatrix[processingNode.first].size(); i++)
+		{
+			if (adjacencyMatrix[processingNode.first][i] == 1) {
+				if (visited[i] == 0 && notRock(rocks,i))
+				{
+					visited[i] = 1;
+					std::vector<int> history = processingNode.second;
+					history.emplace_back(processingNode.first);
+					visitationNodes.push(std::make_pair(i,history));
+				}
 			}
-				
 		}
 	}
+
+	return {};
 }
 
 
 int main() {
-	std::vector<node> nodes;
-	for (int i = 0; i < 13; i++) nodes.emplace_back(node());
+	std::vector<std::vector<int>> adjacencyMatrix = {
+		std::vector<int>{0,1,-1,-1,1,-1,-1,-1,-1,-1,-1,-1}, //0
+		std::vector<int>{1,0,1,-1,-1,1,-1,-1,-1,-1,-1,-1}, //1
+		std::vector<int>{-1,1,0,1,-1,-1,1,-1,-1,-1,-1,-1}, //2
+		std::vector<int>{-1,-1,1,0,-1,-1,-1,1,-1,-1,-1,-1}, //3
+		std::vector<int>{1,-1,-1,-1,0,1,-1,-1,1,-1,-1,-1}, //4
+		std::vector<int>{0,1,-1,-1,1,0,1,-1,-1,1,-1,-1},   //5
+		std::vector<int>{-1,-1,1,-1,-1,1,0,1,-1-1,1-1},	   //6
+		std::vector<int>{-1,-1,-1,1,-1,-1,1,0,-1,-1,-1,1}, //7
+		std::vector<int>{-1,-1,-1,-1,1,-1,-1,-1,0,1,-1,-1}, //8
+		std::vector<int>{-1,-1,-1,-1,-1,1,-1,-1,1,0,1,-1}, //9
+		std::vector<int>{-1,-1,-1,-1,-1,-1,1,-1,-1,1,0,1}, //10
+		std::vector<int>{-1,-1,-1,-1,-1,-1,-1,1,-1,-1,1,0}  //11
+	};
 
-	nodes[0].neighbours.emplace_back(&nodes[9]);
-	nodes[0].neighbours.emplace_back(&nodes[7]);
-	nodes[0].neighbours.emplace_back(&nodes[11]);
+	std::vector<int> rocks = std::vector<int>{ 5,6,8 };
+	int start = 0;
+	int end = 10;
 
-	nodes[1].neighbours.emplace_back(&nodes[10]);
-	nodes[1].neighbours.emplace_back(&nodes[8]);
-
-	nodes[2].neighbours.emplace_back(&nodes[12]);
-	nodes[2].neighbours.emplace_back(&nodes[3]);
-
-	nodes[3].neighbours.emplace_back(&nodes[7]);
-	nodes[3].neighbours.emplace_back(&nodes[2]);
-	nodes[3].neighbours.emplace_back(&nodes[4]);
-
-	nodes[4].neighbours.emplace_back(&nodes[3]);
-
-	nodes[5].neighbours.emplace_back(&nodes[6]);
-
-	nodes[6].neighbours.emplace_back(&nodes[7]);
-	nodes[6].neighbours.emplace_back(&nodes[5]);
-
-	nodes[7].neighbours.emplace_back(&nodes[0]);
-	nodes[7].neighbours.emplace_back(&nodes[3]);
-	nodes[7].neighbours.emplace_back(&nodes[6]);
-	nodes[7].neighbours.emplace_back(&nodes[11]);
-
-	nodes[8].neighbours.emplace_back(&nodes[9]);
-	nodes[8].neighbours.emplace_back(&nodes[1]);
-	nodes[8].neighbours.emplace_back(&nodes[12]);
-
-	nodes[9].neighbours.emplace_back(&nodes[10]);
-	nodes[9].neighbours.emplace_back(&nodes[8]);
-	nodes[9].neighbours.emplace_back(&nodes[0]);
-
-	nodes[10].neighbours.emplace_back(&nodes[1]);
-	nodes[10].neighbours.emplace_back(&nodes[9]);
-
-	nodes[11].neighbours.emplace_back(&nodes[0]);
-	nodes[11].neighbours.emplace_back(&nodes[7]);
-
-	nodes[12].neighbours.emplace_back(&nodes[8]);
-	nodes[12].neighbours.emplace_back(&nodes[2]);
-
-	bfs(nodes[0]);
+	auto result = shortestPath(start, end, rocks, adjacencyMatrix);
+	if (result.has_value()) {
+		for (auto i : *result) {
+			std::cout << i << " ";
+		}
+		std::cout << std::endl;
+	}
 }

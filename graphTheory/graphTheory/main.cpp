@@ -1,83 +1,110 @@
 #include<iostream>
-#include<string>
-#include<queue>
 #include<vector>
+#include<string>
 
+#include<stack>
+#include<queue>
 #include<optional>
 #include<utility>
 
-bool notRock(std::vector<int> rocks, int i) {
-	for (auto rock : rocks) {
-		if (rock == i)
-			return false;
-	}
+//topological sorting
 
-	return true;
-}
+struct node {
+	char name;
+	std::vector<node*> neighbours;
+	bool visited = false;
+};
+node* a = new node{ 'a',std::vector<node*>() };
+node* b = new node{ 'b',std::vector<node*>() };
+node* c = new node{ 'c',std::vector<node*>() };
+node* d = new node{ 'd',std::vector<node*>() };
+node* e = new node{ 'e',std::vector<node*>() };
+node* f = new node{ 'f',std::vector<node*>() };
+node* g = new node{ 'g',std::vector<node*>() };
+node* h = new node{ 'h',std::vector<node*>() };
+node* i = new node{ 'i',std::vector<node*>() };
+node* j = new node{ 'j',std::vector<node*>() };
+node* k = new node{ 'k',std::vector<node*>() };
+node* l = new node{ 'l',std::vector<node*>() };
+node* m = new node{ 'm',std::vector<node*>() };
 
-std::optional<std::vector<int>> shortestPath(int start, int end, std::vector<int> rocks, std::vector<std::vector<int>> adjacencyMatrix) {
-	
-	std::vector<int> visited = std::vector<int>(adjacencyMatrix.size(), 0);
-	std::queue<std::pair<int,std::vector<int>>> visitationNodes;
 
-	visitationNodes.push(std::make_pair(start,std::vector<int>()));
-	visited[start] = 1;
-
-	while (!visitationNodes.empty())
+std::stack<node*> topologicalSort(node* start)
+{
+	static std::stack<node*> sortedNodes;
+	if (start->visited == false)
 	{
-		std::pair<int,std::vector<int>> processingNode = visitationNodes.front();
-		visitationNodes.pop();
+		start->visited = true;
 
-		if (processingNode.first == end)
+		for (node* neighbour : start->neighbours)
 		{
-			processingNode.second.emplace_back(processingNode.first); //we no longer care about proper maintainence as the stack frame is destroyed by the return..
-			return processingNode.second;
-		}
-			
-
-		for (int i = 0; i < adjacencyMatrix[processingNode.first].size(); i++)
-		{
-			if (adjacencyMatrix[processingNode.first][i] == 1) {
-				if (visited[i] == 0 && notRock(rocks,i))
-				{
-					visited[i] = 1;
-					std::vector<int> history = processingNode.second;
-					history.emplace_back(processingNode.first);
-					visitationNodes.push(std::make_pair(i,history));
-				}
+			if (neighbour->visited == false)
+			{
+				topologicalSort(neighbour);
 			}
 		}
-	}
 
-	return {};
+		sortedNodes.push(start);
+		return sortedNodes;
+	}
+	else return sortedNodes;
+}
+
+void constructGraph(){
+	a->neighbours.emplace_back(d);
+
+	b->neighbours.emplace_back(d);
+
+	c->neighbours.emplace_back(a);
+	c->neighbours.emplace_back(b);
+
+	d->neighbours.emplace_back(h);
+	d->neighbours.emplace_back(g);
+
+	e->neighbours.emplace_back(a);
+	e->neighbours.emplace_back(d);
+	e->neighbours.emplace_back(f);
+
+	f->neighbours.emplace_back(k);
+	f->neighbours.emplace_back(j);
+
+	g->neighbours.emplace_back(i);
+
+	h->neighbours.emplace_back(j);
+	h->neighbours.emplace_back(i);
+
+	i->neighbours.emplace_back(l);
+
+	j->neighbours.emplace_back(m);
+	j->neighbours.emplace_back(l);
+
+	k->neighbours.emplace_back(j);
 }
 
 
 int main() {
-	std::vector<std::vector<int>> adjacencyMatrix = {
-		std::vector<int>{0,1,-1,-1,1,-1,-1,-1,-1,-1,-1,-1}, //0
-		std::vector<int>{1,0,1,-1,-1,1,-1,-1,-1,-1,-1,-1}, //1
-		std::vector<int>{-1,1,0,1,-1,-1,1,-1,-1,-1,-1,-1}, //2
-		std::vector<int>{-1,-1,1,0,-1,-1,-1,1,-1,-1,-1,-1}, //3
-		std::vector<int>{1,-1,-1,-1,0,1,-1,-1,1,-1,-1,-1}, //4
-		std::vector<int>{0,1,-1,-1,1,0,1,-1,-1,1,-1,-1},   //5
-		std::vector<int>{-1,-1,1,-1,-1,1,0,1,-1-1,1-1},	   //6
-		std::vector<int>{-1,-1,-1,1,-1,-1,1,0,-1,-1,-1,1}, //7
-		std::vector<int>{-1,-1,-1,-1,1,-1,-1,-1,0,1,-1,-1}, //8
-		std::vector<int>{-1,-1,-1,-1,-1,1,-1,-1,1,0,1,-1}, //9
-		std::vector<int>{-1,-1,-1,-1,-1,-1,1,-1,-1,1,0,1}, //10
-		std::vector<int>{-1,-1,-1,-1,-1,-1,-1,1,-1,-1,1,0}  //11
-	};
+	constructGraph();
+	
+	//instead of randomly taking a starting point and checking if all nodes are accounted 
+	//for after each iteration.. I simply decided to run topological sort n times 
+	//the state between each call is being saved.. making the function useless when more than one graph has to be worked 
+	//this was more efficient for the representation I used to represent the graph in memory
+	topologicalSort(a);
+	topologicalSort(b);
+	topologicalSort(c);
+	topologicalSort(d);
+	topologicalSort(e);
+	topologicalSort(f);
+	topologicalSort(g);
+	topologicalSort(h);
+	topologicalSort(i);
+	topologicalSort(j);
+	topologicalSort(k);
+	topologicalSort(l);
+	auto result = topologicalSort(m);
 
-	std::vector<int> rocks = std::vector<int>{ 5,6,8 };
-	int start = 0;
-	int end = 10;
-
-	auto result = shortestPath(start, end, rocks, adjacencyMatrix);
-	if (result.has_value()) {
-		for (auto i : *result) {
-			std::cout << i << " ";
-		}
-		std::cout << std::endl;
+	while (!result.empty()) {
+		std::cout << result.top()->name << " ";
+		result.pop();
 	}
 }

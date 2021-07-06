@@ -1,35 +1,4 @@
 ﻿  DAG.cpp
-D:\dev\project\tutorial\graph-theory\graphTheory\graphTheory\DAG.cpp(27,34): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-D:\dev\project\tutorial\graph-theory\graphTheory\graphTheory\DAG.cpp(65,55): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xmemory(714,47): error C2440: 'initializing': cannot convert from 'std::vector<DAG::node *,std::allocator<DAG::node *>>' to '_Objty'
-          with
-          [
-              _Objty=DAG::node *
-          ]
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\xmemory(714,47): message : No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\vector(721): message : see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,std::vector<_Ty,_Alloc>&>(_Alloc &,_Objty *const ,std::vector<_Ty,_Alloc> &)' being compiled
-          with
-          [
-              _Alloc=std::allocator<DAG::node *>,
-              _Ty=DAG::node *,
-              _Objty=DAG::node *
-          ]
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\vector(726): message : see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,std::vector<_Ty,_Alloc>&>(_Alloc &,_Objty *const ,std::vector<_Ty,_Alloc> &)' being compiled
-          with
-          [
-              _Alloc=std::allocator<DAG::node *>,
-              _Ty=DAG::node *,
-              _Objty=DAG::node *
-          ]
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30037\include\vector(739): message : see reference to function template instantiation '_Ty *&std::vector<_Ty,std::allocator<_Ty>>::_Emplace_back_with_unused_capacity<std::vector<_Ty,std::allocator<_Ty>>&>(std::vector<_Ty,std::allocator<_Ty>> &)' being compiled
-          with
-          [
-              _Ty=DAG::node *
-          ]
-D:\dev\project\tutorial\graph-theory\graphTheory\graphTheory\DAG.cpp(107): message : see reference to function template instantiation '_Ty *&std::vector<_Ty,std::allocator<_Ty>>::emplace_back<std::vector<_Ty,std::allocator<_Ty>>&>(std::vector<_Ty,std::allocator<_Ty>> &)' being compiled
-          with
-          [
-              _Ty=DAG::node *
-          ]
-  main.cpp
-  Generating Code...
+D:\dev\project\tutorial\graph-theory\graphTheory\graphTheory\DAG.cpp(19,34): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\dev\project\tutorial\graph-theory\graphTheory\graphTheory\DAG.cpp(57,55): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  graphTheory.vcxproj -> D:\dev\project\tutorial\graph-theory\graphTheory\x64\Debug\graphTheory.exe

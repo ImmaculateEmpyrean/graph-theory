@@ -29,7 +29,6 @@ public:
 
 	DAG() = default;
 	DAG(int number);
-	//DAG(std::vector<node> nodes);
 	
 public:
 	node* operator[](int name);
@@ -40,20 +39,15 @@ public:
 
 	std::vector<node*> topSort();
 	
+	void initializeDfs();
 	std::vector<node*> dfs(int startName);
-	std::vector<node*> dfs(node* n, std::vector<int> visited = std::vector<int>());
+	std::vector<node*> dfs(node* n, bool initialize = true);
 
 	//std::vector<node*> bfs(int startName);
-
-private:
-	//std::vector<node*> dfsHelper(node* n);
 
 private:
 	std::unordered_map<int, node> m_nodes;
 	std::vector<node*> m_nodesVector;
 
-	std::queue<node*> tempQueue;
-
-	std::vector<node*> tempVector;
 	std::vector<int> visited;
 };

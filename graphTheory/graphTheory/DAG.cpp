@@ -1,14 +1,6 @@
 #include "DAG.h"
 #include "utility.h"
 
-/*DAG::DAG(std::vector<DAG::node> nodes)
-{
-	for (auto& n : nodes)
-	{
-		m_nodes[n.name] = std::move(n);
-		m_nodesVector.emplace_back(&m_nodes[n.name]);
-	}	
-}*/
 DAG::DAG(int number)
 {
 	for (int i = 0; i < number; i++)
@@ -52,10 +44,10 @@ DAG::node* DAG::getNode(int name)
 	return this->operator[](name);
 }
 
-
+bool flag = true;
 std::vector<DAG::node*> DAG::topSort() 
 {
-	tempVector.clear();
+	//tempVector.clear();
 	visited = std::vector<int>(m_nodesVector.size(), 0);
 	
 	std::vector<node*> topSort;
@@ -65,12 +57,18 @@ std::vector<DAG::node*> DAG::topSort()
 		int startNumber = random(0, m_nodesVector.size() - 1);
 		if (visited[startNumber] != 1)
 		{
-			auto result = dfs(m_nodesVector[startNumber]);
+			auto result = dfs(m_nodesVector[startNumber],flag);
+			flag = false;
 			for (auto ele : result)
+			{
 				topSort.insert(topSort.begin(), ele);
+				visited[ele->getIndex()] = 1;
+			}
+				
 		}	
 	}
 
+	flag = true;
 	return topSort;
 }
 
@@ -83,47 +81,32 @@ std::vector<DAG::node*> DAG::dfs(int name)
 
 	node* startNode = &nod->second;
 	
-	
-	
-	//tempVector.clear();
-	//visited = std::vector<int>(m_nodesVector.size(), 0);
-
-
-
-
-	//return dfsHelper(startNode);
+	return dfs(startNode);
 }
 
 
-std::vector<DAG::node*> DAG::dfs(node* n,std::vector<int> visited)
+void DAG::initializeDfs()
 {
-	if (visited.size() <= n->getIndex())
-	{
-		std::vector<DAG::node*> result;
-		for (node* neighbour : n->neighbours)
-		{
-			auto res = dfs(neighbour, visited);
-			for (auto r : res)
-				result.emplace_back(res);
-		}
-		result.insert(result.begin(), n);
-		return result;
-	}
+	visited.clear();
+	visited.resize(m_nodesVector.size(), 0);
 }
+std::vector<DAG::node*> DAG::dfs(node* n,bool initialize)
+{ 
+	if (initialize == true)
+		initializeDfs();
 
-
-
-
-/*std::vector<DAG::node*> DAG::dfsHelper(DAG::node* n)
-{
 	visited[n->getIndex()] = 1;
 
+	std::vector<DAG::node*> result;
 	for (node* neighbour : n->neighbours)
 	{
 		if (visited[neighbour->getIndex()] == 0)
-			dfsHelper(neighbour);			
+		{
+			std::vector<node*> res = dfs(neighbour,false);
+			for (node* i : res)
+				result.emplace_back(i);
+		}
 	}
-		
-	tempVector.emplace_back(n);
-	return tempVector;
-}*/
+	result.emplace_back(n);
+	return result;	
+}

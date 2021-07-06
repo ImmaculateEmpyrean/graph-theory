@@ -44,6 +44,7 @@ public:
 	std::vector<node*> dfs(node* n, bool initialize = true);
 
 	//std::vector<node*> bfs(int startName);
+	std::vector<node*> bfs(node* n);
 
 private:
 	std::unordered_map<int, node> m_nodes;

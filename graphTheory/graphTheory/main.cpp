@@ -48,7 +48,7 @@ int main()
 
 	tDag['k']->neighbours.emplace_back(tDag['j']);
 
-	auto vec = tDag.topSort();
+	auto vec = tDag.bfs(tDag['a']);
 
 	for (auto& i : vec)
 	{

@@ -47,10 +47,8 @@ DAG::node* DAG::getNode(int name)
 bool flag = true;
 std::vector<DAG::node*> DAG::topSort() 
 {
-	//tempVector.clear();
-	visited = std::vector<int>(m_nodesVector.size(), 0);
-	
 	std::vector<node*> topSort;
+	visited.resize(m_nodesVector.size(), 0);
 
 	while (topSort.size() < m_nodesVector.size())
 	{
@@ -63,25 +61,12 @@ std::vector<DAG::node*> DAG::topSort()
 			{
 				topSort.insert(topSort.begin(), ele);
 				visited[ele->getIndex()] = 1;
-			}
-				
+			}			
 		}	
 	}
 
-	flag = true;
+	flag = true; //next time dfs is invoked.. better clean the provided array provided by the main.. 
 	return topSort;
-}
-
-
-std::vector<DAG::node*> DAG::dfs(int name)
-{
-	auto nod = m_nodes.find(name);
-	if (nod == m_nodes.end())
-		return std::vector<DAG::node*>();
-
-	node* startNode = &nod->second;
-	
-	return dfs(startNode);
 }
 
 
@@ -89,6 +74,16 @@ void DAG::initializeDfs()
 {
 	visited.clear();
 	visited.resize(m_nodesVector.size(), 0);
+}
+std::vector<DAG::node*> DAG::dfs(int startName)
+{
+	auto nod = m_nodes.find(startName);
+	if (nod == m_nodes.end())
+		return std::vector<DAG::node*>();
+
+	node* startNode = &nod->second;
+	
+	return dfs(startNode,true);
 }
 std::vector<DAG::node*> DAG::dfs(node* n,bool initialize)
 { 
@@ -109,4 +104,32 @@ std::vector<DAG::node*> DAG::dfs(node* n,bool initialize)
 	}
 	result.emplace_back(n);
 	return result;	
+}
+
+std::vector<DAG::node*> DAG::bfs(DAG::node* n)
+{
+	std::vector<int> visited = std::vector<int>(m_nodesVector.size(), 0);
+	std::queue<node*> nodalQueue;
+	std::vector<node*> result;
+
+	visited[n->getIndex()] = 1;
+	nodalQueue.push(n);
+
+	while (nodalQueue.size() != 0)
+	{
+		node* current = nodalQueue.front();
+		result.emplace_back(current);
+		nodalQueue.pop();
+
+		for (node* neighbour : current->neighbours)
+		{
+			if (visited[neighbour->getIndex()] == 0)
+			{
+				visited[neighbour->getIndex()] = 1;
+				nodalQueue.push(neighbour);
+			}
+		}
+	}
+
+	return result;
 }

@@ -1,110 +1,56 @@
-#include<iostream>
-#include<vector>
-#include<string>
+#include "DAG.h"
+//shortest and longest path in a dag
 
-#include<stack>
-#include<queue>
-#include<optional>
-#include<utility>
-
-//topological sorting
-
-struct node {
-	char name;
-	std::vector<node*> neighbours;
-	bool visited = false;
-};
-node* a = new node{ 'a',std::vector<node*>() };
-node* b = new node{ 'b',std::vector<node*>() };
-node* c = new node{ 'c',std::vector<node*>() };
-node* d = new node{ 'd',std::vector<node*>() };
-node* e = new node{ 'e',std::vector<node*>() };
-node* f = new node{ 'f',std::vector<node*>() };
-node* g = new node{ 'g',std::vector<node*>() };
-node* h = new node{ 'h',std::vector<node*>() };
-node* i = new node{ 'i',std::vector<node*>() };
-node* j = new node{ 'j',std::vector<node*>() };
-node* k = new node{ 'k',std::vector<node*>() };
-node* l = new node{ 'l',std::vector<node*>() };
-node* m = new node{ 'm',std::vector<node*>() };
-
-
-std::stack<node*> topologicalSort(node* start)
+int main()
 {
-	static std::stack<node*> sortedNodes;
-	if (start->visited == false)
-	{
-		start->visited = true;
+	DAG tDag;
 
-		for (node* neighbour : start->neighbours)
-		{
-			if (neighbour->visited == false)
-			{
-				topologicalSort(neighbour);
-			}
-		}
+	tDag.addNode('a');
+	tDag.addNode('b');
+	tDag.addNode('c');
+	tDag.addNode('d');
+	tDag.addNode('e');
+	tDag.addNode('f');
+	tDag.addNode('g');
+	tDag.addNode('h');
+	tDag.addNode('i');
+	tDag.addNode('j');
+	tDag.addNode('k');
+	tDag.addNode('l');
+	tDag.addNode('m');
 
-		sortedNodes.push(start);
-		return sortedNodes;
-	}
-	else return sortedNodes;
-}
+	tDag['a']->neighbours.emplace_back(tDag['d']);
 
-void constructGraph(){
-	a->neighbours.emplace_back(d);
+	tDag['b']->neighbours.emplace_back(tDag['d']);
 
-	b->neighbours.emplace_back(d);
+	tDag['c']->neighbours.emplace_back(tDag['a']);
+	tDag['c']->neighbours.emplace_back(tDag['b']);
 
-	c->neighbours.emplace_back(a);
-	c->neighbours.emplace_back(b);
+	tDag['d']->neighbours.emplace_back(tDag['h']);
 
-	d->neighbours.emplace_back(h);
-	d->neighbours.emplace_back(g);
+	tDag['e']->neighbours.emplace_back(tDag['a']);
+	tDag['e']->neighbours.emplace_back(tDag['f']);
+	tDag['e']->neighbours.emplace_back(tDag['d']);
 
-	e->neighbours.emplace_back(a);
-	e->neighbours.emplace_back(d);
-	e->neighbours.emplace_back(f);
+	tDag['f']->neighbours.emplace_back(tDag['k']);
+	tDag['f']->neighbours.emplace_back(tDag['j']);
 
-	f->neighbours.emplace_back(k);
-	f->neighbours.emplace_back(j);
-
-	g->neighbours.emplace_back(i);
-
-	h->neighbours.emplace_back(j);
-	h->neighbours.emplace_back(i);
-
-	i->neighbours.emplace_back(l);
-
-	j->neighbours.emplace_back(m);
-	j->neighbours.emplace_back(l);
-
-	k->neighbours.emplace_back(j);
-}
-
-
-int main() {
-	constructGraph();
+	tDag['g']->neighbours.emplace_back(tDag['i']);
 	
-	//instead of randomly taking a starting point and checking if all nodes are accounted 
-	//for after each iteration.. I simply decided to run topological sort n times 
-	//the state between each call is being saved.. making the function useless when more than one graph has to be worked 
-	//this was more efficient for the representation I used to represent the graph in memory
-	topologicalSort(a);
-	topologicalSort(b);
-	topologicalSort(c);
-	topologicalSort(d);
-	topologicalSort(e);
-	topologicalSort(f);
-	topologicalSort(g);
-	topologicalSort(h);
-	topologicalSort(i);
-	topologicalSort(j);
-	topologicalSort(k);
-	topologicalSort(l);
-	auto result = topologicalSort(m);
+	tDag['h']->neighbours.emplace_back(tDag['j']);
+	tDag['h']->neighbours.emplace_back(tDag['i']);
 
-	while (!result.empty()) {
-		std::cout << result.top()->name << " ";
-		result.pop();
+	tDag['i']->neighbours.emplace_back(tDag['l']);
+
+	tDag['j']->neighbours.emplace_back(tDag['l']);
+	tDag['j']->neighbours.emplace_back(tDag['m']);
+
+	tDag['k']->neighbours.emplace_back(tDag['j']);
+
+	auto vec = tDag.topSort();
+
+	for (auto& i : vec)
+	{
+		std::cout << (char)i->name << " ";
 	}
 }

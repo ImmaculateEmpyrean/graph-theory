@@ -106,6 +106,17 @@ std::vector<DAG::node*> DAG::dfs(node* n,bool initialize)
 	return result;	
 }
 
+std::vector<DAG::node*> DAG::bfs(int startName)
+{
+	auto casket = m_nodes.find(startName);
+	if (casket == m_nodes.end())
+	{
+		std::cout << "node : " << startName << " not found.. error in line : " << __LINE__
+			<< " in file : " << __FILE__ << std::endl;
+		return std::vector<DAG::node*>();
+	}
+	return DAG::bfs(&casket->second);
+}
 std::vector<DAG::node*> DAG::bfs(DAG::node* n)
 {
 	std::vector<int> visited = std::vector<int>(m_nodesVector.size(), 0);

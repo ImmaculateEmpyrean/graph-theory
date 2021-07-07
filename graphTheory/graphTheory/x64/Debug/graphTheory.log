@@ -1,2 +1,6 @@
-﻿  main.cpp
+﻿  DAG.cpp
+D:\dev\project\tutorial\graph-theory\graphTheory\graphTheory\DAG.cpp(19,34): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\dev\project\tutorial\graph-theory\graphTheory\graphTheory\DAG.cpp(55,55): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  main.cpp
+  Generating Code...
   graphTheory.vcxproj -> D:\dev\project\tutorial\graph-theory\graphTheory\x64\Debug\graphTheory.exe

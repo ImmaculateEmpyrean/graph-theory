@@ -40,10 +40,10 @@ public:
 	std::vector<node*> topSort();
 	
 	void initializeDfs();
-	std::vector<node*> dfs(int startName);
+	std::vector<node*> dfs(int startName); //preferably donot use this as it may not work as intended
 	std::vector<node*> dfs(node* n, bool initialize = true);
 
-	//std::vector<node*> bfs(int startName);
+	std::vector<node*> bfs(int startName); //preferably donot use this as it may not work as intended
 	std::vector<node*> bfs(node* n);
 
 private:
